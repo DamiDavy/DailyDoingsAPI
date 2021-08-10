@@ -1,0 +1,26 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>{% block title %}Social Network{% endblock %}</title>
+</head>
+
+<body>
+
+    <div>
+
+        {% if user.is_authenticated %}
+        <p>As {{ user.username }}</p>
+        {% endif %}
+
+        {% block body %}
+        {% endblock %}
+
+    </div>
+    {% block script %}
+    {% endblock %}
+</body>
+
+</html>

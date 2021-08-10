@@ -1,0 +1,27 @@
+{% extends "handling/layout.html" %}
+{% load static %}
+
+{% block body %}
+
+<h2>Login</h2>
+
+<form id="login-form">
+    <div>
+        <input id="login">
+    </div>
+    <div>
+        <input type='password' id="password" >
+    </div>
+
+    <input type="submit" />
+</form>
+
+{% if user.is_authenticated %}
+<hr><button id="button-logout">Log Out</button>
+{% endif %}
+
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'handling/login.js' %}"></script>
+{% endblock %}

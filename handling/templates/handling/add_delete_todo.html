@@ -1,0 +1,33 @@
+{% extends "handling/layout.html" %}
+{% load static %}
+
+{% block body %}
+
+<h2>Add Todo</h2>
+
+<form id="add-todo-form">
+    <div>
+        <input id="title">
+    </div>
+    <div>
+        <input id="date" >
+    </div>
+
+    <input type="submit" />
+</form>
+
+<h2>Delete Todo</h2>
+
+<form id="delete-todo-form">
+    <div>
+        <input id="todo-id">
+    </div>
+
+    <input type="submit" />
+</form>
+
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'handling/add-delete-todo.js' %}"></script>
+{% endblock %}
