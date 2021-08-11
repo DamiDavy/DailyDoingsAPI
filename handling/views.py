@@ -3,10 +3,13 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import authenticate, login, logout
 import json
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.db import IntegrityError
 
 from .models import User, Todo
+
+def hi(request):
+  return HttpResponse("Hi!")
 
 @csrf_exempt
 def login_view(request):
