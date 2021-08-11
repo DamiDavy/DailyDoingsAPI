@@ -30,7 +30,7 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', '=@-%w0h8hqf6gmwsv1coxb77e*f_$5
 
 DEBUG = os.environ.get('DJANGO_DEBUG', '') != 'False'
 
-ALLOWED_HOSTS = ['locacalendarapi.herokuapp.com']
+ALLOWED_HOSTS = ['locacalendarapi.herokuapp.com', 'http://localhost:3000']
 
 # Application definition
 
