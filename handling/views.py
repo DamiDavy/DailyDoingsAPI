@@ -28,12 +28,27 @@ def login_view(request):
 
     # Check if authentication successful
     if user is not None:
-        login(request, user)
-        return JsonResponse({"message": "Authenticated", "result": 0}, status=200)
+      login(request, user)
+      return JsonResponse({"message": "Authenticated successsfully", "login": request.user.username, "result": 0}, status=200)
     else:
-        return JsonResponse({"message": "Invalid email and/or password", "result": 1}, status=401)
+      return JsonResponse({"message": "Invalid email and/or password", "result": 1}, status=401)
   else:
     return render(request, "handling/login.html")
+
+@csrf_exempt
+def is_logged_in(request):
+  if request.method == "POST":
+    user = request.user
+
+    data = json.loads(request.body)
+      # post_data = json.loads(request.body.decode("utf-8"))
+
+    name = data.get("login")
+    if user.username == name and name != '': 
+      return JsonResponse({"message": "Authenticated", "login": request.user.username, "name": name, "result": 0}, status=200)
+    else: 
+      return JsonResponse({"message": "Unauthorized", "login": request.user.username, "name": name, "result": 1}, status=401)
+
 
 def logout_view(request):
     logout(request)
@@ -64,35 +79,43 @@ def register(request):
   else:
     return render(request, "handling/registration.html")
 
-@login_required
+@csrf_exempt
+# @login_required
 def todos(request):
-  current_user = request.user
-  user_todos = Todo.objects.filter(user=current_user)
-  return JsonResponse([todo.serialize() for todo in user_todos], safe=False)
+  if request.method == "POST":
+    data = json.loads(request.body)
+    login = data.get("login")
+    year = data.get("year")
+    month = data.get("month")
+  # current_user = request.user
+    user_todos = Todo.objects.filter(user=login, year=year, month=month)
+    # user_todos = Todo.objects.all()
+    return JsonResponse([todo.serialize() for todo in user_todos], safe=False)
 
 
 @csrf_exempt
-@login_required
+# @login_required
 def add_delete_todo(request):
   if request.method == "POST":
 
     data = json.loads(request.body)
 
+    user = data.get("user")
     title = data.get("title")
     date = data.get("date")
 
     date_as_list = date.split("-")
 
-    current_user = request.user
+    # current_user = request.user
 
-    todo = Todo(user=current_user, title=title, year=date_as_list[0], month=date_as_list[1], day=date_as_list[2])
+    todo = Todo(user=user, title=title, year=date_as_list[0], month=date_as_list[1], day=date_as_list[2])
     todo.save()
 
-    return JsonResponse({"message": "Todo've been saved successfully", "result": 0}, status=200)
+    return JsonResponse({"message": "Todo've been saved successfully", "user": user, "result": 0}, status=200)
 
   elif request.method == "PUT":
     data = json.loads(request.body)
-    todo_id = data.get("delete")
+    todo_id = data.get("id")
     Todo.objects.get(pk=todo_id).delete()
     return JsonResponse({"message": "Todo've been deleted successfully", "result": 0}, status=200)
   else:

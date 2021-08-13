@@ -6,7 +6,8 @@ class User(AbstractUser):
     pass
 
 class Todo(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="todos")
+    user = models.CharField(max_length=30)
+    # user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="todos")
     title = models.CharField(max_length=30)
     year = models.CharField(max_length=4)
     month = models.CharField(max_length=2)
@@ -19,5 +20,5 @@ class Todo(models.Model):
             "year": self.year,
             "month": self.month,
             "day": self.day,
-            "user": self.user.username
+            "user": self.user,
         }

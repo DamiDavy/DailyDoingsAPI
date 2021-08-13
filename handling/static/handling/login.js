@@ -6,6 +6,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
   const buttonLogout = document.querySelector('#button-logout')
 
+  const buttonChecking = document.querySelector('#button-checking')
+
   loginForm.onsubmit = (e) => {
 
     fetch('login', {
@@ -29,6 +31,20 @@ document.addEventListener('DOMContentLoaded', function() {
       .then(response => response.json())
       .then(result => console.log(result))
     }
+  }
+
+  buttonChecking.onclick = () => {
+
+  console.log('log in?')
+
+  fetch('todos', {
+      method: 'POST',
+      body: JSON.stringify({
+        login: login.value,
+      })
+    })
+  .then(response => response.json())
+  .then(result => console.log(result))
   }
   
 })
