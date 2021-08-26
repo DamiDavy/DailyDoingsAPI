@@ -5,118 +5,125 @@ from django.contrib.auth import authenticate, login, logout
 import json
 from django.http import JsonResponse, HttpResponse
 from django.db import IntegrityError
+from datetime import timedelta, date
 
-from .models import User, Todo
+# from .models import User, Todo, Session
+# from .utils import session_is_valid
 
-def hi(request):
-  return HttpResponse("Hi!")
+def index(request):
+  return render(request, "handling/index.html")
 
-@csrf_exempt
-def login_view(request):
-  if request.method == "POST":
+# @csrf_exempt
+# def login_view(request):
+#   if request.method == "POST":
 
-    data = json.loads(request.body)
-      # post_data = json.loads(request.body.decode("utf-8"))
+#     data = json.loads(request.body)
 
-    name = data.get("login")
-    password = data.get("password")
+#     name = data.get("login")
+#     password = data.get("password")
 
-    # Attempt to sign user in
-    # email = request.POST["email"]
-    # password = request.POST["password"]
-    user = authenticate(request, username=name, password=password)
+#     user = authenticate(request, username=name, password=password)
 
-    # Check if authentication successful
-    if user is not None:
-      login(request, user)
-      return JsonResponse({"message": "Authenticated successsfully", "login": request.user.username, "result": 0}, status=200)
-    else:
-      return JsonResponse({"message": "Invalid email and/or password", "result": 1}, status=401)
-  else:
-    return render(request, "handling/login.html")
+#     if user is not None:
+#       login(request, user)
 
-@csrf_exempt
-def is_logged_in(request):
-  if request.method == "POST":
-    user = request.user
+#       session = Session(user=user)
+#       session.save()
 
-    data = json.loads(request.body)
-      # post_data = json.loads(request.body.decode("utf-8"))
+#       return JsonResponse({"message": "Authenticated successsfully", "login": request.user.username, "session": session.id, 
+#         "result": 0}, status=200)
+#     else:
+#       return JsonResponse({"message": "Invalid email and/or password", "result": 1}, status=401)
+#   else:
+#     return JsonResponse({"message": "Method Not Allowed", "result": 1}, status=405)
 
-    name = data.get("login")
-    if user.username == name and name != '': 
-      return JsonResponse({"message": "Authenticated", "login": request.user.username, "name": name, "result": 0}, status=200)
-    else: 
-      return JsonResponse({"message": "Unauthorized", "login": request.user.username, "name": name, "result": 1}, status=401)
+# @csrf_exempt
+# def is_logged_in(request):
+#   if request.method == "POST":
+#     data = json.loads(request.body)
+#     session_id = data.get("session")
+#     user = session_is_valid(session_id)
 
-
-def logout_view(request):
-    logout(request)
-    return JsonResponse({"message": "Logged Out", "result": 0}, status=200)
-
-@csrf_exempt
-def register(request):
-  if request.method == "POST":
-
-    data = json.loads(request.body)
-
-    login = data.get("login")
-    email = data.get("email")
-    password = data.get("password")
-    confirmation = data.get("confirmation")
-
-    if password != confirmation:
-      return JsonResponse({"message": "Passwords must match", "result": 1}, status=400)
-
-    try:
-      user = User.objects.create_user(login, email, password)
-      user.save()
-    except IntegrityError:
-      return JsonResponse({"message": "Username've been already taken", "result": 1}, status=400)
-
-    # login(request, user)
-    return JsonResponse({"message": "Registered successfully", "result": 0}, status=200)
-  else:
-    return render(request, "handling/registration.html")
-
-@csrf_exempt
-# @login_required
-def todos(request):
-  if request.method == "POST":
-    data = json.loads(request.body)
-    login = data.get("login")
-    year = data.get("year")
-    month = data.get("month")
-  # current_user = request.user
-    user_todos = Todo.objects.filter(user=login, year=year, month=month)
-    # user_todos = Todo.objects.all()
-    return JsonResponse([todo.serialize() for todo in user_todos], safe=False)
+#     if user is not None:
+#       return JsonResponse({"message": "Authenticated", "session": session_id, "name": user.username, "result": 0}, status=200)
+#     else: 
+#       return JsonResponse({"message": "Unauthorized", "result": 1}, status=401)
+#   else:
+#     return JsonResponse({"message": "Method Not Allowed", "result": 1}, status=405)
 
 
-@csrf_exempt
-# @login_required
-def add_delete_todo(request):
-  if request.method == "POST":
+# @csrf_exempt
+# def logout_view(request):
+#   if request.method == "POST":
+#     data = json.loads(request.body)
+#     session = data.get("session")
+#     Session.objects.get(pk=session).delete()
+#     logout(request)
+#     return JsonResponse({"message": "Logged Out", "result": 0}, status=200)
+#   else:
+#     return JsonResponse({"message": "Method Not Allowed", "result": 1}, status=405)
 
-    data = json.loads(request.body)
+# @csrf_exempt
+# def register(request):
+#   if request.method == "POST":
 
-    user = data.get("user")
-    title = data.get("title")
-    date = data.get("date")
+#     data = json.loads(request.body)
 
-    date_as_list = date.split("-")
+#     login = data.get("login")
+#     email = data.get("email")
+#     password = data.get("password")
+#     confirmation = data.get("confirmation")
 
-    # current_user = request.user
+#     if password != confirmation:
+#       return JsonResponse({"message": "Passwords must match", "result": 1}, status=400)
+      
 
-    todo = Todo(user=user, title=title, year=date_as_list[0], month=date_as_list[1], day=date_as_list[2])
-    todo.save()
+#     try:
+#       user = User.objects.create_user(login, email, password)
+#       user.save()
+#     except IntegrityError:
+#       return JsonResponse({"message": "Username've been already taken", "result": 1}, status=400)
+#     return JsonResponse({"message": "Registered successfully", "result": 0}, status=200)
 
-    return JsonResponse({"message": "Todo've been saved successfully", "user": user, "result": 0}, status=200)
+#   else:
+#     return JsonResponse({"message": "Method Not Allowed", "result": 1}, status=405)
 
-  elif request.method == "PUT":
-    data = json.loads(request.body)
-    todo_id = data.get("id")
-    Todo.objects.get(pk=todo_id).delete()
-    return JsonResponse({"message": "Todo've been deleted successfully", "result": 0}, status=200)
-  else:
-    return render(request, "handling/add_delete_todo.html")
+# @csrf_exempt
+# def todos(request, session, year, month):
+#   user = session_is_valid(session)
+
+#   if user is None:
+#     return JsonResponse({"message": "Unauthorized", "result": 1}, status=401)
+
+#   user_todos = Todo.objects.filter(user=user, year=year, month=month)
+
+#   return JsonResponse([todo.serialize() for todo in user_todos], safe=False)
+
+# @csrf_exempt
+# def add_delete_todo(request):
+#   if request.method == "POST":
+
+#     data = json.loads(request.body)
+
+#     title = data.get("title")
+#     date = data.get("date")
+#     session_id = data.get("session")
+
+#     user = session_is_valid(session_id)
+
+#     if user is None:
+#       return JsonResponse({"message": "Unauthorized", "result": 1}, status=401)
+
+#     date_as_list = date.split("-")
+
+#     todo = Todo(user=user, title=title, year=date_as_list[0], month=date_as_list[1], day=date_as_list[2])
+#     todo.save()
+#     return JsonResponse({"message": "Todo've been saved successfully", "result": 0}, status=200)
+
+#   elif request.method == "PUT":
+#     data = json.loads(request.body)
+#     todo_id = data.get("id")
+#     Todo.objects.get(pk=todo_id).delete()
+#     return JsonResponse({"message": "Todo've been deleted successfully", "result": 0}, status=200)
+#   else:
+#     return JsonResponse({"message": "Method Not Allowed", "result": 1}, status=405)

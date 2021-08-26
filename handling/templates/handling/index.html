@@ -1,0 +1,235 @@
+{% extends "handling/layout.html" %}
+{% load static %}
+
+{% block body %}
+<div class="container text-primary">
+
+	<h2 class="mt-4">Todos Calendar API documentation</h2>
+	<p class="text-secondary">https://locacalendarapi.herokuapp.com</p>
+	<div class="api-container">
+		<div>
+			<div class="d-flex justify-content-around url-container p-2 border-bottom border-primary" id="1">
+				<div class="ps-3">/is-auth</div>
+				<div class="pe-2 http-method-title text-secondary">POST</div>
+			</div>
+			<div class="content border p-3" id="c-1">
+				<div class="pb-3">User Authorization</div>
+				<div class="text-secondary">
+					<h6>Request</h6>
+					<pre>
+			Media type: application/json
+			Type: object
+
+			Properties
+				session: number
+					</pre>
+					<h6>Response</h6>
+					<pre>
+			Media type: application/json
+			Type: object
+
+			Properties
+				message: string,
+				result: number
+				(0 indicates success, 1 indicates error),
+
+				on success:
+				session: number, 
+				name: string
+					</pre>
+				</div>
+			</div>
+		</div>
+
+		<div>
+			<div class="d-flex justify-content-around url-container p-2 border-bottom border-primary" id="2">
+				<div class="ps-3">/login</div>
+				<div class="pe-2 http-method-title text-secondary">POST</div>
+			</div>
+			<div class="content border p-3" id="c-2">
+				<div class="pb-3">User Authentification</div>
+				<div class="text-secondary">
+					<h6>Request</h6>
+					<pre>
+			Media type: application/json
+			Type: object
+
+			Properties
+				login: string,
+				password: string
+					</pre>
+					<h6>Response</h6>
+					<pre>
+			Media type: application/json
+			Type: object
+
+			Properties
+				message: string,
+				result: number
+				(0 indicates success, 1 indicates error),
+
+				on success:
+				session: number, 
+				login: string
+					</pre>
+				</div>
+			</div>
+		</div>
+
+		<div>
+			<div class="d-flex justify-content-around url-container p-2 border-bottom border-primary" id="3">
+				<div class="ps-3">/logout</div>
+				<div class="pe-2 http-method-title text-secondary">POST</div>
+			</div>
+			<div class="content border p-3" id="c-3">
+				<div class="pb-3">End Of User Session</div>
+				<div class="text-secondary">
+					<h6>Request</h6>
+					<pre>
+			Media type: application/json
+			Type: object
+
+			Properties
+				session: number
+					</pre>
+					<h6>Response</h6>
+					<pre>
+			Media type: application/json
+			Type: object
+
+			Properties
+				message: string,
+				result: number
+				(0 indicates success, 1 indicates error)
+					</pre>
+				</div>
+			</div>
+		</div>
+
+		<div>
+			<div class="d-flex justify-content-around url-container p-2 border-bottom border-primary" id="4">
+				<div class="ps-3">/register</div>
+				<div class="pe-2 http-method-title text-secondary">POST</div>
+			</div>
+			<div class="content border p-3" id="c-4">
+				<div class="pb-3">New User Registration</div>
+				<div class="text-secondary">
+					<h6>Request</h6>
+					<pre>
+			Media type: application/json
+			Type: object
+
+			Properties
+				login: string,
+				email: string,
+				password: string,
+				confirmation: string
+					</pre>
+					<h6>Response</h6>
+					<pre>
+			Media type: application/json
+			Type: object
+
+			Properties
+				message: string,
+				result: number
+				(0 indicates success, 1 indicates error)
+					</pre>
+				</div>
+			</div>
+		</div>
+
+		<div>
+			<div class="d-flex justify-content-around url-container p-2 border-bottom border-primary" id="5">
+				<div class="ps-3">/todos</div>
+				<div class="pe-2 http-method-title text-secondary">GET</div>
+			</div>
+			<div class="content border p-3" id="c-5">
+				<div class="pb-3">User Todos Array</div>
+				<div class="text-secondary">
+					<h6>Request</h6>
+					<pre>
+				URI Parameters
+					session: number,
+					year: string,
+					month: string
+					</pre>
+					<h6>Response</h6>
+					<pre>
+			Media type: application/json
+			Type: array
+
+			Item Properties
+				id: number,
+				title: string,
+				year: string,
+				month: string,
+				day: string,
+				user: string,
+					</pre>
+				</div>
+			</div>
+		</div>
+
+		<div>
+			<div class="d-flex justify-content-around url-container p-2 border-bottom border-primary" id="6">
+				<div class="ps-3">/todo</div>
+				<div class="pe-2 http-method-title text-secondary"><span>POST</span> <span class="ps-3">PUT</span></div>
+			</div>
+			<div class="content border p-3" id="c-6">
+				<div class="pb-3">Adding / Deleting Todo</div>
+				<div class="text-secondary">
+					<h5>POST</h5>
+					<h6>Request</h6>
+					<pre>
+			Media type: application/json
+			Type: object
+
+			Properties
+				title: string,
+				date: string,
+				session: number
+					</pre>
+					<h6>Response</h6>
+					<pre>
+			Media type: application/json
+			Type: object
+
+			Properties
+				message: string,
+				result: number
+				(0 indicates success, 1 indicates error)
+					</pre>
+				</div>
+
+				<div class="text-secondary">
+					<h5>PUT</h5>
+					<h6>Request</h6>
+					<pre>
+			Media type: application/json
+			Type: object
+
+			Properties
+				id: number
+					</pre>
+					<h6>Response</h6>
+					<pre>
+			Media type: application/json
+			Type: object
+
+			Properties
+				message: string,
+				result: number
+				(0 indicates success, 1 indicates error)
+					</pre>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'handling/index.js' %}"></script>
+{% endblock %}

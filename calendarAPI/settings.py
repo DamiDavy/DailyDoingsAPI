@@ -150,7 +150,7 @@ STATIC_URL = '/static/'
 # https://warehouse.python.org/project/whitenoise/
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-CORS_ORIGIN_WHITELIST = 'https://willhandleit.herokuapp.com/', 'http://localhost:3000/',
+CORS_ORIGIN_WHITELIST = 'http://localhost:3000', 'https://willhandleit.herokuapp.com',
 
 # CORS_ORIGIN_ALLOW_ALL = True
 
@@ -175,10 +175,13 @@ CORS_ORIGIN_WHITELIST = 'https://willhandleit.herokuapp.com/', 'http://localhost
 #     "x-csrftoken",
 #     "x-requested-with",
 # ]
-
+CORS_EXPOSE_HEADERS = ['Content-Type', 'X-CSRFToken']
 CORS_ALLOW_CREDENTIALS = True
 
 # CSRF_TRUSTED_ORIGINS = [
 #     "*"]
 
-
+CSRF_COOKIE_SAMESITE = 'Lax'
+SESSION_COOKIE_SAMESITE = 'Lax'
+CSRF_COOKIE_HTTPONLY = True
+SESSION_COOKIE_HTTPONLY = False
