@@ -41,8 +41,10 @@ def login_view(request):
 def is_logged_in(request):
   if request.method == "POST":
     data = json.loads(request.body)
-    session_id = data.get("session")
+    session_id = int(data.get("session"))
+    print(session_id)
     user = session_is_valid(session_id)
+    print(user)
 
     if user is not None:
       return JsonResponse({"message": "Authenticated", "session": session_id, "name": user.username, "result": 0}, status=200)
@@ -100,7 +102,7 @@ def todos(request, session, year, month):
   return JsonResponse([todo.serialize() for todo in user_todos], safe=False)
 
 @csrf_exempt
-def add_delete_todo(request):
+def add_todo(request):
   if request.method == "POST":
 
     data = json.loads(request.body)
@@ -119,11 +121,24 @@ def add_delete_todo(request):
     todo = Todo(user=user, title=title, year=date_as_list[0], month=date_as_list[1], day=date_as_list[2])
     todo.save()
     return JsonResponse({"message": "Todo've been saved successfully", "result": 0}, status=200)
+  else:
+    return JsonResponse({"message": "Method Not Allowed", "result": 1}, status=405)
 
-  elif request.method == "PUT":
-    data = json.loads(request.body)
-    todo_id = data.get("id")
-    Todo.objects.get(pk=todo_id).delete()
+@csrf_exempt
+def edit_delete_todo(request, id):
+  if request.method == "DELETE":
+    #data = json.loads(request.body)
+    # todo_id = data.get("id")
+    Todo.objects.get(pk=id).delete()
     return JsonResponse({"message": "Todo've been deleted successfully", "result": 0}, status=200)
+  elif request.method == "PUT":
+    todo = Todo.objects.get(pk=id)
+    
+    data = json.loads(request.body)
+    title = data.get("title")
+
+    todo.title = title
+    todo.save()
+    return JsonResponse({"message": "Todo've been updated successfully", "result": 0}, status=200)
   else:
     return JsonResponse({"message": "Method Not Allowed", "result": 1}, status=405)
