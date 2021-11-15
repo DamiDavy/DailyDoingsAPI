@@ -150,7 +150,7 @@ STATIC_URL = '/static/'
 # https://warehouse.python.org/project/whitenoise/
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-CORS_ORIGIN_WHITELIST = 'http://localhost:3000', 'https://willhandleit.herokuapp.com',
+CORS_ORIGIN_WHITELIST = 'http://localhost:3000', 'https://willhandleit.herokuapp.com', 'http://willhandleit.herokuapp.com',
 
 # CORS_ORIGIN_ALLOW_ALL = True
 
